@@ -2,17 +2,20 @@ package aop.stage0;
 
 import aop.DataAccessException;
 import aop.StubUserHistoryDao;
+import aop.config.DataSourceConfig;
 import aop.domain.User;
 import aop.repository.UserDao;
 import aop.repository.UserHistoryDao;
 import aop.service.AppUserService;
 import aop.service.UserService;
+import java.lang.reflect.Proxy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,7 +48,11 @@ class Stage0Test {
     @Test
     void testChangePassword() {
         final var appUserService = new AppUserService(userDao, userHistoryDao);
-        final UserService userService = null;
+        final UserService userService = (UserService) Proxy.newProxyInstance(
+                AppUserService.class.getClassLoader(),
+                new Class[]{UserService.class},
+                new TransactionHandler(platformTransactionManager, appUserService)
+        );
 
         final var newPassword = "qqqqq";
         final var createBy = "gugu";
