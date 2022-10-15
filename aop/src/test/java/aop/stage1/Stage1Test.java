@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -41,8 +42,7 @@ class Stage1Test {
 
     @Test
     void testChangePassword() {
-        final UserService userService = null;
-
+        UserService userService = registerProxyFactoryBean(new UserService(userDao, userHistoryDao));
         final var newPassword = "qqqqq";
         final var createBy = "gugu";
         userService.changePassword(1L, newPassword, createBy);
@@ -54,7 +54,7 @@ class Stage1Test {
 
     @Test
     void testTransactionRollback() {
-        final UserService userService = null;
+        final UserService userService = registerProxyFactoryBean(new UserService(userDao, stubUserHistoryDao));
 
         final var newPassword = "newPassword";
         final var createBy = "gugu";
@@ -65,4 +65,24 @@ class Stage1Test {
 
         assertThat(actual.getPassword()).isNotEqualTo(newPassword);
     }
+
+    private UserService registerProxyFactoryBean(final UserService userService) {
+        final ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
+        proxyFactoryBean.setTarget(userService);
+        TransactionAdvice advice = new TransactionAdvice(platformTransactionManager);
+        TransactionPointcut pointcut = new TransactionPointcut();
+        proxyFactoryBean.addAdvisor(new TransactionAdvisor(advice, pointcut));
+        proxyFactoryBean.setProxyTargetClass(true);
+        return (UserService) proxyFactoryBean.getObject();
+    }
+
+//    private void registerProxyFactoryBean2(final UserService userService) {
+//        final ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
+//        proxyFactoryBean.setTarget(userService);
+//        TransactionAdvice advice = new TransactionAdvice(platformTransactionManager);
+//        TransactionPointcut pointcut = new TransactionPointcut();
+//        proxyFactoryBean.addAdvisor(new TransactionAdvisor(advice, pointcut));
+//        proxyFactoryBean.setProxyTargetClass(true);
+//        return (UserService) proxyFactoryBean.getObject();
+//    }
 }
