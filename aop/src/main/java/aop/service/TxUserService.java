@@ -5,12 +5,12 @@ import aop.domain.User;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-public class TxUserService implements UserService {
+public class TxUserService implements LegacyUserService {
 
     private final PlatformTransactionManager transactionManager;
-    private final UserService userService;
+    private final LegacyUserService userService;
 
-    public TxUserService(final PlatformTransactionManager transactionManager, final UserService userService) {
+    public TxUserService(final PlatformTransactionManager transactionManager, final LegacyUserService userService) {
         this.transactionManager = transactionManager;
         this.userService = userService;
     }

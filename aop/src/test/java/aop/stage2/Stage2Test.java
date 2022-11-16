@@ -3,6 +3,7 @@ package aop.stage2;
 import aop.DataAccessException;
 import aop.StubUserHistoryDao;
 import aop.domain.User;
+import aop.service.LegacyUserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -18,11 +19,15 @@ class Stage2Test {
 
     private static final Logger log = LoggerFactory.getLogger(Stage2Test.class);
 
-    @Autowired
     private UserService userService;
 
-    @Autowired
     private StubUserHistoryDao stubUserHistoryDao;
+
+    @Autowired
+    public Stage2Test(final UserService userService, final StubUserHistoryDao stubUserHistoryDao) {
+        this.userService = userService;
+        this.stubUserHistoryDao = stubUserHistoryDao;
+    }
 
     @BeforeEach
     void setUp() {
@@ -43,7 +48,7 @@ class Stage2Test {
 
     @Test
     void testTransactionRollback() {
-        userService.setUserHistoryDao(stubUserHistoryDao);
+//        userService.setUserHistoryDao(stubUserHistoryDao);
 
         final var newPassword = "newPassword";
         final var createBy = "gugu";

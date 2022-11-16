@@ -1,5 +1,7 @@
 package aop.stage2;
 
+import aop.repository.UserDao;
+import aop.repository.UserHistoryDao;
 import aop.stage1.TransactionAdvice;
 import aop.stage1.TransactionAdvisor;
 import aop.stage1.TransactionPointcut;
@@ -10,13 +12,21 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class AopConfig {
 
     @Autowired
     private PlatformTransactionManager platformTransactionManager;
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private UserHistoryDao userHistoryDao;
 
     @Bean
     public Pointcut transactionPointcut() {

@@ -25,14 +25,14 @@ public class TransactionHandler implements InvocationHandler {
      */
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-        Method[] declaredMethods = target.getClass().getDeclaredMethods();
-        System.out.println("declaredMethods = " + Arrays.toString(declaredMethods));
-//        Method temp = target.getClass().getDeclaredMethod(method.toGenericString());
-        System.out.println("method.toGenericString() = " + method.toGenericString());
-        System.out.println("method.getParameterTypes() = " + Arrays.toString(method.getParameterTypes()));
-        Class<?>[] parameterTypes = method.getParameterTypes();
-        Method temp2 = target.getClass().getDeclaredMethod(method.toGenericString(), parameterTypes[0], parameterTypes[1], parameterTypes[2]);
-        System.out.println("temp2 = " + temp2);
+//        Method[] declaredMethods = target.getClass().getDeclaredMethods();
+//        System.out.println("declaredMethods = " + Arrays.toString(declaredMethods));
+////        Method temp = target.getClass().getDeclaredMethod(method.toGenericString());
+//        System.out.println("method.toGenericString() = " + method.toGenericString());
+//        System.out.println("method.getParameterTypes() = " + Arrays.toString(method.getParameterTypes()));
+//        Class<?>[] parameterTypes = method.getParameterTypes();
+//        Method temp2 = target.getClass().getDeclaredMethod(method.toGenericString(), method.getParameterTypes());
+//        System.out.println("temp2 = " + temp2);
 //        System.out.println("temp = " + temp);
 //        Method[] targetMethods = target.getClass().getDeclaredMethod(method);
 //        Annotation[] annotations = temp.getAnnotations();

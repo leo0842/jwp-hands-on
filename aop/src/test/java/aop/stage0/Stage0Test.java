@@ -2,12 +2,11 @@ package aop.stage0;
 
 import aop.DataAccessException;
 import aop.StubUserHistoryDao;
-import aop.config.DataSourceConfig;
 import aop.domain.User;
 import aop.repository.UserDao;
 import aop.repository.UserHistoryDao;
 import aop.service.AppUserService;
-import aop.service.UserService;
+import aop.service.LegacyUserService;
 import java.lang.reflect.Proxy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,27 +44,38 @@ class Stage0Test {
     }
 
     @Test
-    void testChangePassword() {
+    void testChangePassword() throws Throwable {
         final var appUserService = new AppUserService(userDao, userHistoryDao);
-        final UserService userService = (UserService) Proxy.newProxyInstance(
+        final LegacyUserService userService = (LegacyUserService) Proxy.newProxyInstance(
                 AppUserService.class.getClassLoader(),
-                new Class[]{UserService.class},
+                new Class[]{LegacyUserService.class},
                 new TransactionHandler(platformTransactionManager, appUserService)
         );
-
+//        final TransactionHandler userService = (TransactionHandler) Proxy.newProxyInstance(
+//                AppUserService.class.getClassLoader(),
+//                new Class[]{UserService.class},
+//                new TransactionHandler(platformTransactionManager, appUserService)
+//        );
+//
         final var newPassword = "qqqqq";
         final var createBy = "gugu";
         userService.changePassword(1L, newPassword, createBy);
-
-        final var actual = userService.findById(1L);
-
-        assertThat(actual.getPassword()).isEqualTo(newPassword);
+//        userService.invoke(new TransactionHandler(platformTransactionManager, appUserService),
+//                UserService.class.getMethod("changePassword", long.class, String.class, String.class), new Object[] {1L, newPassword,
+//                createBy});
+//        final var actual = userService.findById(1L);
+//
+//        assertThat(actual.getPassword()).isEqualTo(newPassword);
     }
 
     @Test
     void testTransactionRollback() {
         final var appUserService = new AppUserService(userDao, stubUserHistoryDao);
-        final UserService userService = null;
+        final LegacyUserService userService = (LegacyUserService) Proxy.newProxyInstance(
+                AppUserService.class.getClassLoader(),
+                new Class[]{LegacyUserService.class},
+                new TransactionHandler(platformTransactionManager, appUserService)
+        );
 
         final var newPassword = "newPassword";
         final var createBy = "gugu";

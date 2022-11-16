@@ -22,6 +22,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc:2.7.3'
     implementation 'com.h2database:h2:2.1.214'
+    // 안됨;
+//    implementation group: 'org.springframework', name: 'spring-aop', version: '5.2.22.RELEASE'
+//    implementation 'org.springframework.boot:spring-boot-starter-aop'
+// https://mvnrepository.com/artifact/org.aspectj/aspectjweaver
+    implementation group: 'org.aspectj', name: 'aspectjweaver', version: '1.6.10'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.3'
 

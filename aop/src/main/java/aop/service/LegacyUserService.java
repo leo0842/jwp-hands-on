@@ -3,7 +3,7 @@ package aop.service;
 
 import aop.domain.User;
 
-public interface UserService {
+public interface LegacyUserService {
 
     User findById(final long id);
     void insert(final User user);

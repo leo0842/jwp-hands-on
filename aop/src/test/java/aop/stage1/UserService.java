@@ -5,7 +5,9 @@ import aop.domain.User;
 import aop.domain.UserHistory;
 import aop.repository.UserDao;
 import aop.repository.UserHistoryDao;
+import org.springframework.stereotype.Service;
 
+//@Service
 public class UserService {
 
     private final UserDao userDao;
@@ -16,12 +18,12 @@ public class UserService {
         this.userHistoryDao = userHistoryDao;
     }
 
-    @Transactional
+//    @Transactional
     public User findById(final long id) {
         return userDao.findById(id);
     }
 
-    @Transactional
+//    @Transactional
     public void insert(final User user) {
         userDao.insert(user);
     }

@@ -6,7 +6,7 @@ import aop.domain.UserHistory;
 import aop.repository.UserDao;
 import aop.repository.UserHistoryDao;
 
-public class AppUserService implements UserService {
+public class AppUserService implements LegacyUserService {
 
     private final UserDao userDao;
     private final UserHistoryDao userHistoryDao;

@@ -5,10 +5,13 @@ import aop.domain.User;
 import aop.domain.UserHistory;
 import aop.repository.UserDao;
 import aop.repository.UserHistoryDao;
+import aop.service.LegacyUserService;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Service;
 
-@Service
-public class UserService {
+//@Service
+//@EnableAspectJAutoProxy(proxyTargetClass = true)
+public class UserService {// implements LegacyUserService {
 
     private final UserDao userDao;
     private UserHistoryDao userHistoryDao;
